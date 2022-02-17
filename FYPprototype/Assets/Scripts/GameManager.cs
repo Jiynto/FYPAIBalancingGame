@@ -47,18 +47,19 @@ public class GameManager : MonoBehaviour
         walls.CompressBounds();
         mapTiles = AStar.SetTiles(ground, walls);
 
-
+        /*
         for (int i = 0; i < numMobs; i++)
         {
             AddMob();
         }
+        */
 
     }
 
 
 
 
-    private void AddMob()
+    public void AddMob()
     {
         MapTile Location = mapTiles[Random.Range(0, mapTiles.Count)];
         while(walls.HasTile(Location.cellPosition)) Location = mapTiles[Random.Range(0, mapTiles.Count)];
@@ -89,7 +90,7 @@ public class GameManager : MonoBehaviour
             scoreText.text = "Score:" +score;
             timeSinceLastPoint -= scoreDelay;
         }
-        if (mobs.Count < 2) AddMob();
+        //if (mobs.Count < 2) AddMob();
         foreach (Mob mob in mobs)
         {
             mob.route = AStar.Search(mob.transform.position, player.transform.position);
