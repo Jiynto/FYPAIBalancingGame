@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Tilemaps;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject enemyPrefab;
 
+    public UnityEvent GameOverFlag;
 
     public Player player;
 
@@ -97,7 +99,7 @@ public class GameManager : MonoBehaviour
         }
 
     }
-    private void NewGame()
+    public void NewGame()
     {
         SetLives(3);
 
@@ -105,7 +107,7 @@ public class GameManager : MonoBehaviour
         {
             AddMob();
         }
-
+        this.player.gameObject.transform.position = new Vector3(0, 0, -1);
         this.player.gameObject.SetActive(true);
 
     }
@@ -118,7 +120,6 @@ public class GameManager : MonoBehaviour
         {
             MobDied(mobs.First());
         }
-        NewGame();
     }
 
 
@@ -133,6 +134,7 @@ public class GameManager : MonoBehaviour
         if(this.lives <= 0)
         {
             GameOver();
+            GameOverFlag.Invoke();
         }
     }
 

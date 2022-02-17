@@ -10,6 +10,29 @@ public class BalancingAI : Agent
     [SerializeField] private Transform playerTransform;
     [SerializeField] private GameManager gameManager;
 
+    private void Start()
+    {
+        gameManager.GameOverFlag.AddListener(GameOver);
+    }
+
+    private void GameOver()
+    {
+        EndEpisode();
+    }
+
+    public override void OnEpisodeBegin()
+    {
+        gameManager.NewGame();
+    }
+
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
+        discreteActions[0] = Input.GetButtonDown("enter") ? 1 : 0;
+    }
+
+
+
     public override void OnActionReceived(ActionBuffers actions)
     {
         bool spawn;
@@ -26,7 +49,7 @@ public class BalancingAI : Agent
         {
             gameManager.AddMob();
         }
-
+        AddReward(1 - CalculatePlayerEmpowerment());
     }
 
     public override void CollectObservations(VectorSensor sensor)

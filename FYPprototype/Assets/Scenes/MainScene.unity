@@ -3876,6 +3876,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1431809582}
   - component: {fileID: 1431809581}
+  - component: {fileID: 1431809584}
+  - component: {fileID: 1431809583}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3898,6 +3900,9 @@ MonoBehaviour:
   ground: {fileID: 48673918}
   walls: {fileID: 1935581102}
   enemyPrefab: {fileID: 2924776785348430754, guid: e97839190252d524fb0cc9b1eeb308bd, type: 3}
+  GameOverFlag:
+    m_PersistentCalls:
+      m_Calls: []
   player: {fileID: 477612739}
   mobs: []
   lives: 3
@@ -3917,6 +3922,55 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1431809583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431809580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94c56c9ffa415704ab2e0512f161d347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
+  playerTransform: {fileID: 477612740}
+  gameManager: {fileID: 1431809581}
+--- !u!114 &1431809584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431809580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BrainParameters:
+    VectorObservationSize: 4
+    NumStackedVectorObservations: 1
+    m_ActionSpec:
+      m_NumContinuousActions: 0
+      BranchSizes: 02000000
+    VectorActionSize: 02000000
+    VectorActionDescriptions: []
+    VectorActionSpaceType: 0
+    hasUpgradedBrainParametersWithActionSpec: 1
+  m_Model: {fileID: 0}
+  m_InferenceDevice: 0
+  m_BehaviorType: 0
+  m_BehaviorName: My Behavior
+  TeamId: 0
+  m_UseChildSensors: 1
+  m_UseChildActuators: 1
+  m_DeterministicInference: 0
+  m_ObservableAttributeHandling: 0
 --- !u!1 &1935581099
 GameObject:
   m_ObjectHideFlags: 0
