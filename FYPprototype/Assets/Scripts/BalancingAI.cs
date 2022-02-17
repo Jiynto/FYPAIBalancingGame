@@ -28,7 +28,7 @@ public class BalancingAI : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
-        discreteActions[0] = Input.GetButtonDown("enter") ? 1 : 0;
+        discreteActions[0] = Input.GetKeyDown(KeyCode.Return) ? 1 : 0;
     }
 
 
@@ -39,10 +39,12 @@ public class BalancingAI : Agent
         if(actions.DiscreteActions[0] == 1)
         {
             spawn = true;
+            Debug.Log(spawn);
         }
         else
         {
             spawn = false;
+            Debug.Log(spawn);
         }
 
         if(spawn)

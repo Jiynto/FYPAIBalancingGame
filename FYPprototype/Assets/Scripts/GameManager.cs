@@ -102,11 +102,12 @@ public class GameManager : MonoBehaviour
     public void NewGame()
     {
         SetLives(3);
-
+        /*
         for (int i = 0; i < numMobs; i++)
         {
             AddMob();
         }
+        */
         this.player.gameObject.transform.position = new Vector3(0, 0, -1);
         this.player.gameObject.SetActive(true);
 
