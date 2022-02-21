@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
 
     public List<Mob> mobs;
 
+    public int challengeRating = 1;
+
+    public int maxChallenge = 4;
+
     private List<MapTile> mapTiles;
 
     [SerializeField]

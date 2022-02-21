@@ -3906,6 +3906,8 @@ MonoBehaviour:
       m_Calls: []
   player: {fileID: 477612739}
   mobs: []
+  challengeRating: 1
+  maxChallenge: 4
   lives: 3
   numMobs: 2
   maxMobs: 4
@@ -3955,7 +3957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 4
+    VectorObservationSize: 5
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
