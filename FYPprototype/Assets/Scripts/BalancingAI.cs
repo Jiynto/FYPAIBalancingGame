@@ -47,7 +47,7 @@ public class BalancingAI : Agent
             Debug.Log(spawn);
         }
 
-        if(spawn)
+        if(spawn && gameManager.mobs.Count < gameManager.maxMobs)
         {
             gameManager.AddMob();
         }
@@ -78,10 +78,10 @@ public class BalancingAI : Agent
     private float[] playerFreedom()
     {
         float[] directions = new float[4];
-        directions[0] = Physics.Raycast(playerTransform.position, -transform.right, 1f) ? 1 : 0;
-        directions[1] = Physics.Raycast(playerTransform.position, transform.right, 1f) ? 1 : 0;
-        directions[2] = Physics.Raycast(playerTransform.position, transform.up, 1f) ? 1 : 0;
-        directions[3] = Physics.Raycast(playerTransform.position, -transform.up, 1f) ? 1 : 0;
+        directions[0] = Physics.Raycast(playerTransform.position, -transform.right, 1f) ? 0 : 1;
+        directions[1] = Physics.Raycast(playerTransform.position, transform.right, 1f) ? 0 : 1;
+        directions[2] = Physics.Raycast(playerTransform.position, transform.up, 1f) ? 0 : 1;
+        directions[3] = Physics.Raycast(playerTransform.position, -transform.up, 1f) ? 0 : 1;
         return directions;
     }
 

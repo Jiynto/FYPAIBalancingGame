@@ -3908,6 +3908,7 @@ MonoBehaviour:
   mobs: []
   lives: 3
   numMobs: 2
+  maxMobs: 4
   scoreText: {fileID: 484339037}
 --- !u!4 &1431809582
 Transform:

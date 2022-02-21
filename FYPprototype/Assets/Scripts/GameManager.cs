@@ -32,6 +32,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int numMobs;
 
+    [SerializeField]
+    public int maxMobs;
+
     private int score;
     private float timeSinceLastPoint;
 
