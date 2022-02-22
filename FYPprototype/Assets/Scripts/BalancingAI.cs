@@ -107,11 +107,13 @@ public class BalancingAI : Agent
     /// <returns> An array of values between 0 and 1 representing whether the player can move in a given direction </returns>
     private float[] playerFreedom()
     {
+        float radius = gameManager.player.gameObject.GetComponent<CircleCollider2D>().radius;
+
         float[] directions = new float[4];
-        directions[0] = Physics.Raycast(playerTransform.position, -transform.right, 1f) ? 0 : 1;
-        directions[1] = Physics.Raycast(playerTransform.position, transform.right, 1f) ? 0 : 1;
-        directions[2] = Physics.Raycast(playerTransform.position, transform.up, 1f) ? 0 : 1;
-        directions[3] = Physics.Raycast(playerTransform.position, -transform.up, 1f) ? 0 : 1;
+        directions[0] = Physics.Raycast(playerTransform.position, -transform.right, radius) ? 0 : 1;
+        directions[1] = Physics.Raycast(playerTransform.position, transform.right, radius) ? 0 : 1;
+        directions[2] = Physics.Raycast(playerTransform.position, transform.up, radius) ? 0 : 1;
+        directions[3] = Physics.Raycast(playerTransform.position, -transform.up, radius) ? 0 : 1;
         return directions;
     }
 
