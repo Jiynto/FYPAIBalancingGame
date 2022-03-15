@@ -8,11 +8,15 @@ using UnityEngine.AI;
 
 public class Movement : MonoBehaviour
 {
-    public float speed = 8;
+
+    [SerializeField] private bool destinationBasedMovement;
+
+    public float Movespeed = 8;
     public float speedMultiplier = 1;
     public new Rigidbody2D rigidbody { get; private set; }
 
-    public Vector2 direction;
+    public Vector3 moveVector;
+
 
     public Vector3 startingPosition { get; private set; }
 
@@ -32,8 +36,21 @@ public class Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        float speed = Movespeed;
+        Vector2 direction = moveVector;
+
+        if(destinationBasedMovement)
+        {
+            direction = (moveVector - this.transform.position).normalized;
+            float distance = Vector3.Distance(moveVector, this.transform.position);
+            if (distance < Movespeed)
+            {
+                speed = distance;
+            }
+        }
+
         Vector2 currentPosition = this.rigidbody.position;
-        Vector2 translation = this.direction * this.speed * this.speedMultiplier * Time.fixedDeltaTime;
+        Vector2 translation = direction * speed * this.speedMultiplier * Time.fixedDeltaTime;
         this.rigidbody.MovePosition(currentPosition + translation);
         this.rigidbody.transform.up = direction;
     }

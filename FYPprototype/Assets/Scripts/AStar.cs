@@ -14,7 +14,6 @@ public static class AStar
     private static Tilemap walls = null;
 
 
-
     public static List<MapTile> SetTiles(Tilemap _ground, Tilemap _walls)
     {
         ground = _ground;
@@ -37,6 +36,7 @@ public static class AStar
 
         foreach(MapTile mapTile in mapTiles)
         {
+            
             for(int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)

@@ -139,6 +139,9 @@ MonoBehaviour:
   DeathFlag:
     m_PersistentCalls:
       m_Calls: []
+  DamageFlag:
+    m_PersistentCalls:
+      m_Calls: []
   player: {fileID: 0}
   movement: {fileID: 927729841672720420}
 --- !u!114 &927729841672720420
@@ -153,9 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61bf4f43b2b3cae4086519b40b49e4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destinationBasedMovement: 1
   speed: 1
   speedMultiplier: 1
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 0
   direction: {x: 0, y: 0}

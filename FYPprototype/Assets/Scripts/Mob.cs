@@ -38,17 +38,13 @@ public class Mob : MonoBehaviour
     {
         if (route.Any())
         {
-            if (nextTile == null || Vector3.Distance(nextTile.worldPosition, this.transform.position) < movement.speed)
+            if (nextTile == null || Vector3.Distance(nextTile.worldPosition, this.transform.position) == 0)
             {
                 nextTile = route.Last();
+                this.movement.moveVector = nextTile.worldPosition;
                 route.Remove(nextTile);
-                //this.gameObject.transform.position = nextTile.worldPosition;
+                
             }
-            else
-            {
-                this.movement.direction = (nextTile.worldPosition - this.transform.position).normalized;
-            }
-
         }
        
     }

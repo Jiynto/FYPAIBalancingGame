@@ -81,7 +81,7 @@ public class BalancingAI : Agent
         float scoreEmpowProduct = gameManager.challengeRating * currentEmpowerment;
         float imbalance = NormaliseBetweenMinusOneAndOne(scoreEmpowProduct, 0, gameManager.maxChallenge);
         return imbalance;
-    }
+    } 
 
     
 

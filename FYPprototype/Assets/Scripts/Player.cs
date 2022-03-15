@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     {
         direction.x = Input.GetAxisRaw("Horizontal");
         direction.y = Input.GetAxisRaw("Vertical");
-        movement.direction = direction;
+        movement.moveVector = direction;
 
     }
 

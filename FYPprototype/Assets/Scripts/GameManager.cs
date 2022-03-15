@@ -15,8 +15,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Tilemap walls;
 
+
     [SerializeField]
     private GameObject enemyPrefab;
+
+    [SerializeField]
+    private GameObject pointRep;
 
     public UnityEvent GameOverFlag;
 
@@ -56,6 +60,12 @@ public class GameManager : MonoBehaviour
         walls.CompressBounds();
         mapTiles = AStar.SetTiles(ground, walls);
 
+
+        foreach(MapTile tile in mapTiles)
+        {
+            AddPointRep(tile.worldPosition);
+        }
+
         /*
         for (int i = 0; i < numMobs; i++)
         {
@@ -65,6 +75,11 @@ public class GameManager : MonoBehaviour
 
     }
 
+
+    public void AddPointRep(Vector3 position)
+    {
+        Instantiate(pointRep, position, Quaternion.identity);
+    }
 
 
 
