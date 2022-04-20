@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -12,18 +13,31 @@ public class BalancingAI : Agent
 
     private float ImbalanceValue;
 
-    private List<float> totalImbalance;
+    private List<float> imbalanceList;
 
     private void Start()
     {
         gameManager.GameOverFlag.AddListener(GameOver);
-        totalImbalance = new List<float>();
+        imbalanceList = new List<float>();
+        File.CreateText("C:/Users/owenc/Documents/GitHub/FYPAIBalancingGame/FYPprototype/TrainingDataLogs/CumulativeImbalanceLog.txt");
     }
 
     private void GameOver()
     {
+        float totalImbalance = 0;
+        foreach(float i in imbalanceList)
+        {
+            totalImbalance += i;
+        }
+        float cumulativeImbalance = totalImbalance / imbalanceList.Count;
+        using (StreamWriter sw = File.AppendText("C:/Users/owenc/Documents/GitHub/FYPAIBalancingGame/FYPprototype/TrainingDataLogs/CumulativeImbalanceLog.txt"))
+        {
+            sw.WriteLine(cumulativeImbalance);
+        }
+        imbalanceList = new List<float>();
         EndEpisode();
     }
+
 
     public override void OnEpisodeBegin()
     {
@@ -50,18 +64,23 @@ public class BalancingAI : Agent
             spawn = false;
             Debug.Log(spawn);
         }
-
+        
         if(spawn && gameManager.mobs.Count < gameManager.maxMobs)
         {
+            /*
             int x = actions.DiscreteActions[1] - 9;
             int y = actions.DiscreteActions[2] - 8;
             gameManager.AddMob(x, y);
+            */
+            gameManager.AddMob();
         }
+        
 
         // get current empowerment for this step.
         float currentEmpowerment = CalculatePlayerEmpowerment();
         // get current imbalance in the game for this step.
         ImbalanceValue = CalculateImbalance(currentEmpowerment);
+        imbalanceList.Add(ImbalanceValue);
         Debug.Log("Imbalance: " + ImbalanceValue);
         // calculate reward as 1 - absolute imbalance, where the lowest imbalance is 0.
         AddReward(1 - Mathf.Abs(ImbalanceValue));
@@ -71,10 +90,10 @@ public class BalancingAI : Agent
     {
         float directions = playerFreedom();
         sensor.AddObservation(directions);
-        for(int i = 0; i < gameManager.wallPositions.Length; i++)
-        { 
-        sensor.AddObservation(gameManager.wallPositions[i]);
-        }
+        //for(int i = 0; i < gameManager.wallPositions.Length; i++)
+        //{ 
+        //sensor.AddObservation(gameManager.wallPositions[i]);
+        //}
         sensor.AddObservation(ImbalanceValue);
     }
 
