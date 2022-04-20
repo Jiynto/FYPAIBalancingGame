@@ -69,7 +69,7 @@ public class Shooting : MonoBehaviour
     {
         if (bombs > 0)
         {
-            bombs -= 1;
+            bombs --;
             GameObject bomb = Instantiate(bombPrefab, this.transform.position, this.transform.rotation);
             Rigidbody2D rb = bomb.GetComponent<Rigidbody2D>();
             rb.AddForce(direction * throwForce, ForceMode2D.Impulse);
@@ -82,7 +82,7 @@ public class Shooting : MonoBehaviour
     {
         if(bombs > 0)
         {
-            bombs -= 1;
+            bombs --;
             GameObject bomb = Instantiate(bombPrefab, this.transform.position, this.transform.rotation);
             Rigidbody2D rb = bomb.GetComponent<Rigidbody2D>();
             Vector3 direction = (cam.ScreenToWorldPoint(Input.mousePosition) - this.transform.position).normalized;

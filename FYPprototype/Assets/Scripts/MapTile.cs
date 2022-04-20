@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MapTile
 {
-    public int gCost;
-    public int hCost;
+    public float gCost;
+    public float hCost;
     public Vector3 worldPosition;
 
     public Vector3Int cellPosition;
@@ -20,7 +20,13 @@ public class MapTile
         cellPosition = _cellPosition;
     }
 
-    public int fCost
+    public List<MapTile> GetNeighbours()
+    {
+        return myNeighbours;
+    }
+
+
+    public float fCost
     {
         get
         {
@@ -33,9 +39,5 @@ public class MapTile
         myNeighbours.Add(neighbour);
     }
 
-    public List<MapTile> GetNeightbours()
-    {
-        return myNeighbours;
-    }
 
 }

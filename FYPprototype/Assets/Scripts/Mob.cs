@@ -12,8 +12,7 @@ public class MobEvent : UnityEvent<Mob>
 
 public class Mob : MonoBehaviour
 {
-    public List<MapTile> route; 
-
+    public List<MapTile> route;
 
     public MobEvent DeathFlag;
 
@@ -26,23 +25,40 @@ public class Mob : MonoBehaviour
 
     private MapTile nextTile;
 
+    private MapTile currentTile;
+
 
     private void Start()
     {
-        nextTile = null;
         route = new List<MapTile>();
     }
 
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (route.Any())
         {
-            if (nextTile == null || Vector3.Distance(nextTile.worldPosition, this.transform.position) == 0)
+            if (nextTile == null || Vector3.Distance(nextTile.worldPosition, this.transform.position) == 0 )
             {
+
+                currentTile = nextTile;
                 nextTile = route.Last();
                 this.movement.moveVector = nextTile.worldPosition;
                 route.Remove(nextTile);
+                //float xDiff = Mathf.Abs(currentTile.worldPosition.x - nextTile.worldPosition.x);
+                //float yDiff = Mathf.Abs(currentTile.worldPosition.y - nextTile.worldPosition.y);
+                /*
+                if (!currentTile.GetNeighbours().Contains(nextTile))//xDiff > 1 || yDiff > 1)
+                {
+                    route = new List<MapTile>();
+                    nextTile = null;
+                }
+                else
+                {
+                    this.movement.moveVector = nextTile.worldPosition;
+                    route.Remove(nextTile);
+                }
+                */
                 
             }
         }
@@ -51,17 +67,33 @@ public class Mob : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.transform == player.transform)
+        if (collision.transform == player.transform)
         {
             DamageFlag.Invoke();
             DeathFlag.Invoke(this);
         }
-        else if(collision.gameObject.layer == LayerMask.NameToLayer("Bomb"))
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Bomb"))
         {
             Destroy(collision.gameObject);
             DeathFlag.Invoke(this);
         }
+
     }
+
+
+    public void SetTiles(MapTile tile)
+    {
+        currentTile = tile;
+        nextTile = tile;
+        this.movement.moveVector = nextTile.worldPosition;
+    }
+
+
+    public MapTile GetCurrentGoal()
+    {
+        return nextTile;
+    }
+
 
     public void Die()
     {

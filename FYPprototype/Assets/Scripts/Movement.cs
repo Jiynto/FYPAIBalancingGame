@@ -11,19 +11,24 @@ public class Movement : MonoBehaviour
 
     [SerializeField] private bool destinationBasedMovement;
 
+
+
+
     public float Movespeed = 8;
     public float speedMultiplier = 1;
     public new Rigidbody2D rigidbody { get; private set; }
-
     public Vector3 moveVector;
-
-
     public Vector3 startingPosition { get; private set; }
 
     private void Awake()
     {
         this.rigidbody = GetComponent<Rigidbody2D>();
         this.startingPosition = this.transform.position;
+
+    }
+
+    private void Start()
+    {
     }
 
     public void ResetState()
@@ -36,30 +41,39 @@ public class Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+
         float speed = Movespeed;
         Vector2 direction = moveVector;
 
-        if(destinationBasedMovement)
+        Vector2 currentPosition = this.rigidbody.position;
+        Vector2 translation;
+        if (destinationBasedMovement)
         {
-            direction = (moveVector - this.transform.position).normalized;
+
             float distance = Vector3.Distance(moveVector, this.transform.position);
-            if (distance < Movespeed)
+            direction = (moveVector - this.transform.position).normalized;
+            translation = direction * speed * this.speedMultiplier * Time.fixedDeltaTime;
+            if (translation.magnitude > distance)
             {
-                speed = distance;
+                translation = new Vector2(moveVector.x - this.transform.position.x, moveVector.y - this.transform.position.y);
             }
         }
+        else
+        {
+            translation = direction * speed * this.speedMultiplier * Time.fixedDeltaTime;
+        }
 
-        Vector2 currentPosition = this.rigidbody.position;
-        Vector2 translation = direction * speed * this.speedMultiplier * Time.fixedDeltaTime;
         this.rigidbody.MovePosition(currentPosition + translation);
         this.rigidbody.transform.up = direction;
+
+
+
     }
 
-    private void Move(Vector2 direction)
+    public void SetDestinationMoveType(bool type)
     {
-        //Vector2 move = speed * (transform.forward * Input.GetAxis("Vertical") + transform.right * Input.GetAxis("Horizontal"));
-
-
+        destinationBasedMovement = type;
     }
 
 

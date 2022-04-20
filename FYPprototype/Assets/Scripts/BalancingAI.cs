@@ -12,9 +12,12 @@ public class BalancingAI : Agent
 
     private float ImbalanceValue;
 
+    private List<float> totalImbalance;
+
     private void Start()
     {
         gameManager.GameOverFlag.AddListener(GameOver);
+        totalImbalance = new List<float>();
     }
 
     private void GameOver()
@@ -34,7 +37,6 @@ public class BalancingAI : Agent
     }
 
 
-
     public override void OnActionReceived(ActionBuffers actions)
     {
         bool spawn;
@@ -51,22 +53,28 @@ public class BalancingAI : Agent
 
         if(spawn && gameManager.mobs.Count < gameManager.maxMobs)
         {
-            gameManager.AddMob();
+            int x = actions.DiscreteActions[1] - 9;
+            int y = actions.DiscreteActions[2] - 8;
+            gameManager.AddMob(x, y);
         }
 
         // get current empowerment for this step.
         float currentEmpowerment = CalculatePlayerEmpowerment();
         // get current imbalance in the game for this step.
         ImbalanceValue = CalculateImbalance(currentEmpowerment);
-
+        Debug.Log("Imbalance: " + ImbalanceValue);
         // calculate reward as 1 - absolute imbalance, where the lowest imbalance is 0.
         AddReward(1 - Mathf.Abs(ImbalanceValue));
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        float[] directions = playerFreedom();
+        float directions = playerFreedom();
         sensor.AddObservation(directions);
+        for(int i = 0; i < gameManager.wallPositions.Length; i++)
+        { 
+        sensor.AddObservation(gameManager.wallPositions[i]);
+        }
         sensor.AddObservation(ImbalanceValue);
     }
 
@@ -88,16 +96,21 @@ public class BalancingAI : Agent
     /// <summary>
     /// Calculates the current empowerment of the player in this step.
     /// </summary>
-    /// <returns> The players empowerment </returns>
+    /// <returns> The players empowerment </returns>;
     private float CalculatePlayerEmpowerment()
     {
-        float[] directions = playerFreedom();
+        float directions = playerFreedom();
+        /*
         float degreesOfFreedom = 0;
         foreach(float i in directions)
         {
             degreesOfFreedom += i;
         }
         float empowerment = degreesOfFreedom / 4;
+        Debug.Log("empowerment: " + empowerment);
+        */
+        float empowerment = directions / 8;
+        Debug.Log("empowerment: " + empowerment);
         return empowerment;
     }
 
@@ -105,17 +118,29 @@ public class BalancingAI : Agent
     /// Calculates the degree of freedom the player currently has in their movement.
     /// </summary>
     /// <returns> An array of values between 0 and 1 representing whether the player can move in a given direction </returns>
-    private float[] playerFreedom()
+    private float playerFreedom()
     {
+        /*
         float radius = gameManager.player.gameObject.GetComponent<CircleCollider2D>().radius;
+        float[] freedom = new float[4];
+        Vector3 position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0);
+        freedom[0] = System.Convert.ToInt32(!Physics.Raycast(position, -transform.right, radius, wallsMask));
+        //Debug.DrawRay(position, -transform.right, Color.green);
+        freedom[1] = System.Convert.ToInt32(!Physics.Raycast(position, transform.right, radius, wallsMask));
+        //Debug.DrawRay(position, transform.right, Color.green);
+        freedom[2] = System.Convert.ToInt32(!Physics.Raycast(position, transform.up, radius, wallsMask));
+        //Debug.DrawRay(position, transform.up, Color.green);
+        freedom[3] = System.Convert.ToInt32(! Physics.Raycast(position, -transform.up, radius, wallsMask));
+        //Debug.DrawRay(position, -transform.up, Color.green);
+        */
+        MapTile playerTile = gameManager.FindPositionAsTile(playerTransform.position);
 
-        float[] directions = new float[4];
-        directions[0] = Physics.Raycast(playerTransform.position, -transform.right, radius) ? 0 : 1;
-        directions[1] = Physics.Raycast(playerTransform.position, transform.right, radius) ? 0 : 1;
-        directions[2] = Physics.Raycast(playerTransform.position, transform.up, radius) ? 0 : 1;
-        directions[3] = Physics.Raycast(playerTransform.position, -transform.up, radius) ? 0 : 1;
-        return directions;
+
+
+        return playerTile.GetNeighbours().Count;
     }
+
+
 
 
 
@@ -129,7 +154,14 @@ public class BalancingAI : Agent
     /// <returns> Normalised value </returns>
     private float NormaliseBetweenMinusOneAndOne(float value, float min, float max)
     {
-        return (2 * (value - min / max - min) - 1);
+        float top = value - min;
+        float bottom = max - min;
+        float divided = top / bottom;
+        float timesTwo = divided * 2;
+        float result = timesTwo - 1;
+
+        
+        return result;
     }
 
 }

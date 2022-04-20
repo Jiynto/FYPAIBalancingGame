@@ -1,0 +1,29 @@
+{
+    "AIBalancing": {
+        "checkpoints": [
+            {
+                "steps": 53865,
+                "file_path": "results\\ShortTest2\\AIBalancing\\AIBalancing-53865.onnx",
+                "reward": 0.0,
+                "creation_time": 1649100019.4503584,
+                "auxillary_file_paths": [
+                    "results\\ShortTest2\\AIBalancing\\AIBalancing-53865.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 53865,
+            "file_path": "results\\ShortTest2\\AIBalancing.onnx",
+            "reward": 0.0,
+            "creation_time": 1649100019.4503584,
+            "auxillary_file_paths": [
+                "results\\ShortTest2\\AIBalancing\\AIBalancing-53865.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
