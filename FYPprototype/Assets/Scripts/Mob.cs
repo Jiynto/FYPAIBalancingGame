@@ -65,12 +65,21 @@ public class Mob : MonoBehaviour
        
     }
 
+    public void SetSpeed(float speed)
+    {
+        movement.Movespeed = speed;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform == player.transform)
         {
-            DamageFlag.Invoke();
-            DeathFlag.Invoke(this);
+            if(this != null)
+            {
+                DamageFlag.Invoke();
+                DeathFlag.Invoke(this);
+            }
+
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Bomb"))
         {
@@ -97,7 +106,9 @@ public class Mob : MonoBehaviour
 
     public void Die()
     {
+        this.gameObject.SetActive(false);
         Destroy(this.gameObject);
+
     }
 
     /**

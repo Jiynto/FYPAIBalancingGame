@@ -2,22 +2,31 @@
     "AIBalancing": {
         "checkpoints": [
             {
-                "steps": 0,
-                "file_path": "results\\Test2\\AIBalancing\\AIBalancing-0.onnx",
-                "reward": null,
-                "creation_time": 1650312013.441198,
+                "steps": 499941,
+                "file_path": "results\\Test2\\AIBalancing\\AIBalancing-499941.onnx",
+                "reward": 15.252,
+                "creation_time": 1650657956.0071177,
                 "auxillary_file_paths": [
-                    "results\\Test2\\AIBalancing\\AIBalancing-0.pt"
+                    "results\\Test2\\AIBalancing\\AIBalancing-499941.pt"
+                ]
+            },
+            {
+                "steps": 500005,
+                "file_path": "results\\Test2\\AIBalancing\\AIBalancing-500005.onnx",
+                "reward": 15.252,
+                "creation_time": 1650657956.1126363,
+                "auxillary_file_paths": [
+                    "results\\Test2\\AIBalancing\\AIBalancing-500005.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 0,
+            "steps": 500005,
             "file_path": "results\\Test2\\AIBalancing.onnx",
-            "reward": null,
-            "creation_time": 1650312013.441198,
+            "reward": 15.252,
+            "creation_time": 1650657956.1126363,
             "auxillary_file_paths": [
-                "results\\Test2\\AIBalancing\\AIBalancing-0.pt"
+                "results\\Test2\\AIBalancing\\AIBalancing-500005.pt"
             ]
         }
     },

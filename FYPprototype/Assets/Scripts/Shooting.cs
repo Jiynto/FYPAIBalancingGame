@@ -17,6 +17,8 @@ public class Shooting : MonoBehaviour
     [SerializeField]
     private int maxBombs;
 
+    public int MaxBombs { get { return maxBombs; } }
+
     [SerializeField] private bool aIPlayer;
 
     [SerializeField]

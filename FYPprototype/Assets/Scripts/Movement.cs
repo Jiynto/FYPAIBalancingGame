@@ -50,13 +50,17 @@ public class Movement : MonoBehaviour
         Vector2 translation;
         if (destinationBasedMovement)
         {
-
-            float distance = Vector3.Distance(moveVector, this.transform.position);
-            direction = (moveVector - this.transform.position).normalized;
+            Vector3 currentPositionVector3 = new Vector3(currentPosition.x, currentPosition.y, -1);
+            float distance = Vector3.Distance(moveVector, currentPositionVector3);
+            direction = (moveVector - currentPositionVector3).normalized;
             translation = direction * speed * this.speedMultiplier * Time.fixedDeltaTime;
             if (translation.magnitude > distance)
             {
-                translation = new Vector2(moveVector.x - this.transform.position.x, moveVector.y - this.transform.position.y);
+                translation = new Vector2(moveVector.x - currentPositionVector3.x, moveVector.y - currentPositionVector3.y);
+            }
+            else if(translation == Vector2.zero && distance != 0)
+            {
+                translation = new Vector2(moveVector.x - currentPositionVector3.x, moveVector.y - currentPositionVector3.y);
             }
         }
         else

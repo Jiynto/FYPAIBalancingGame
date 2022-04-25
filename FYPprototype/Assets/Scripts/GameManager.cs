@@ -44,6 +44,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int lives;
 
+    public int Lives { get { return lives; } }
+
+    private int maxLives = 3;
+
+    public int MaxLives { get { return maxLives; } }
+
     [SerializeField]
     private int numMobs;
 
@@ -65,8 +71,11 @@ public class GameManager : MonoBehaviour
 
     private float pathFindingCounter;
 
+    private bool hasDied;
+
     private void Start()
     {
+        hasDied = false;
         score = 0;
         timeSinceLastPoint = 0;
         ground.CompressBounds();
@@ -142,7 +151,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void AddMob(int xPosition, int yPosition)
+    public void AddMob(int xPosition, int yPosition, float speed = 6)
     {
         Vector3Int _location = new Vector3Int(xPosition, yPosition, 0);
         if (!walls.HasTile(_location))
@@ -151,16 +160,21 @@ public class GameManager : MonoBehaviour
             if (tiles.Any())
             {
                 MapTile Location = tiles[0];
-                AddPointRep(Location.worldPosition, false);
-                Vector3 mobPosition = Location.worldPosition;
-                GameObject mobInstance = Instantiate(enemyPrefab, mobPosition, Quaternion.identity);
-                Mob newMob = mobInstance.GetComponent<Mob>();
-                newMob.SetTiles(Location);
-                newMob.player = player;
-                newMob.DeathFlag.AddListener(MobDied);
-                newMob.DamageFlag.AddListener(PlayerHit);
-                mobs.Add(newMob);
-                newMob.route = AStar.Search(newMob.transform.position, player.transform.position);
+                if(!(Vector3.Distance(Location.worldPosition, player.gameObject.transform.position) < 4))
+                {
+                    //AddPointRep(Location.worldPosition, false);
+                    Vector3 mobPosition = Location.worldPosition;
+                    GameObject mobInstance = Instantiate(enemyPrefab, mobPosition, Quaternion.identity);
+                    Mob newMob = mobInstance.GetComponent<Mob>();
+                    newMob.SetSpeed(speed);
+                    newMob.SetTiles(Location);
+                    newMob.player = player;
+                    newMob.DeathFlag.AddListener(MobDied);
+                    newMob.DamageFlag.AddListener(PlayerHit);
+                    mobs.Add(newMob);
+                    newMob.route = AStar.Search(newMob.transform.position, player.transform.position);
+                }
+                
 
             }
         }
@@ -181,54 +195,63 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        pathFindingCounter -= Time.deltaTime;
-        timeSinceLastPoint += Time.deltaTime;
-        if(timeSinceLastPoint >= scoreDelay)
+        if(hasDied)
         {
-            score++;
-            scoreText.text = "Score:" +score;
-            timeSinceLastPoint -= scoreDelay;
+            GameOver();
         }
-
-        /*
-        if(mobs.Count < numMobs)
+        else
         {
-            AddMob();
-        }
-        */
-
-        List<Vector3> mobPositions = new List<Vector3>();
-
-        MapTile currentPlayerTile = FindPositionAsTile(player.gameObject.transform.position);
-        bool playerMoved = false;
-        if (currentPlayerTile != playerTile )
-        {
-            playerMoved = true;
-            playerTile = currentPlayerTile;
-            
-        }
-        foreach (Mob mob in mobs)
-        {
-            if(playerMoved)
+            pathFindingCounter -= Time.deltaTime;
+            timeSinceLastPoint += Time.deltaTime;
+            if (timeSinceLastPoint >= scoreDelay)
             {
-                mob.route = AStar.Search(mob.GetCurrentGoal().worldPosition, player.transform.position);
-                //AddPointRep(mob.route.First().worldPosition, true);
+                score++;
+                scoreText.text = "Score:" + score;
+                timeSinceLastPoint -= scoreDelay;
             }
-            else if(pathFindingCounter <= 0)
+
+            /*
+            if(mobs.Count < numMobs)
             {
-                mob.route = AStar.Search(mob.GetCurrentGoal().worldPosition, player.transform.position);
+                AddMob();
             }
-            mobPositions.Add(mob.gameObject.transform.position);
+            */
+
+            List<Vector3> mobPositions = new List<Vector3>();
+
+            MapTile currentPlayerTile = FindPositionAsTile(player.gameObject.transform.position);
+            bool playerMoved = false;
+            if (currentPlayerTile != playerTile)
+            {
+                playerMoved = true;
+                playerTile = currentPlayerTile;
+
+            }
+            foreach (Mob mob in mobs)
+            {
+                if (playerMoved)
+                {
+                    mob.route = AStar.Search(mob.GetCurrentGoal().worldPosition, player.transform.position);
+                    //AddPointRep(mob.route.First().worldPosition, true);
+                }
+                else if (pathFindingCounter <= 0)
+                {
+                    mob.route = AStar.Search(mob.GetCurrentGoal().worldPosition, player.transform.position);
+                }
+                mobPositions.Add(mob.gameObject.transform.position);
+
+            }
+
+            if (pathFindingCounter <= 0)
+            {
+                player.route = AStar.AvoidanceSearch(player.GetCurrentGoal().worldPosition, mobPositions);
+                pathFindingCounter = pathFindingTimer;
+            }
+
+            //AddPointRep(player.route.Last().worldPosition, false);
 
         }
 
-        if(pathFindingCounter <= 0)
-        {
-            player.route = AStar.AvoidanceSearch(player.GetCurrentGoal().worldPosition, mobPositions);
-            pathFindingCounter = pathFindingTimer;
-        }
-        
-        //AddPointRep(player.route.Last().worldPosition, false);
 
 
     }
@@ -248,10 +271,13 @@ public class GameManager : MonoBehaviour
         this.player.ClearMovement(tiles.First());
         this.player.gameObject.SetActive(true);
 
+        hasDied = false;
+
     }
 
     private void GameOver()
     {
+
         player.gameObject.SetActive(false);
         score = 0;
         GameObject[] allObjects = GameObject.FindGameObjectsWithTag("PointRep");
@@ -264,7 +290,7 @@ public class GameManager : MonoBehaviour
         {
             MobDied(mobs.First());
         }
-        NewGame();
+        GameOverFlag.Invoke();
     }
 
 
@@ -276,10 +302,11 @@ public class GameManager : MonoBehaviour
     public void PlayerHit()
     {
         SetLives(this.lives - 1);
-        if(this.lives <= 0)
+        if(this.lives <= 0 && hasDied == false)
         {
-            GameOver();
-            GameOverFlag.Invoke();
+            hasDied = true;
+
+
         }
     }
 

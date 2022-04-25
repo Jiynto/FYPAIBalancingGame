@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using UnityEditor;
 
 public class BalancingAI : Agent
 {
@@ -15,11 +16,16 @@ public class BalancingAI : Agent
 
     private List<float> imbalanceList;
 
+    private List<float> moveSpeedList;
+
     private void Start()
     {
         gameManager.GameOverFlag.AddListener(GameOver);
         imbalanceList = new List<float>();
+        moveSpeedList = new List<float>();
         File.CreateText("C:/Users/owenc/Documents/GitHub/FYPAIBalancingGame/FYPprototype/TrainingDataLogs/CumulativeImbalanceLog.txt");
+        File.CreateText("C:/Users/owenc/Documents/GitHub/FYPAIBalancingGame/FYPprototype/TrainingDataLogs/MoveSpeedLog.txt");
+
     }
 
     private void GameOver()
@@ -30,12 +36,39 @@ public class BalancingAI : Agent
             totalImbalance += i;
         }
         float cumulativeImbalance = totalImbalance / imbalanceList.Count;
-        using (StreamWriter sw = File.AppendText("C:/Users/owenc/Documents/GitHub/FYPAIBalancingGame/FYPprototype/TrainingDataLogs/CumulativeImbalanceLog.txt"))
+
+        float totalSpeed = 0;
+        foreach(float i in moveSpeedList)
         {
-            sw.WriteLine(cumulativeImbalance);
+            totalSpeed += i;
         }
-        imbalanceList = new List<float>();
-        EndEpisode();
+        float averageSpeed = totalSpeed / moveSpeedList.Count;
+
+        if(float.IsNaN(cumulativeImbalance) || float.IsNaN(averageSpeed))
+        {
+            Debug.Log(averageSpeed);
+            Debug.Log(totalSpeed);
+            Debug.Log(moveSpeedList.Count);
+            Debug.Log(cumulativeImbalance);
+            Debug.Log(totalImbalance);
+            Debug.Log(imbalanceList.Count);
+            Debug.Break();
+        }
+        else
+        {
+            using (StreamWriter sw = File.AppendText("C:/Users/owenc/Documents/GitHub/FYPAIBalancingGame/FYPprototype/TrainingDataLogs/CumulativeImbalanceLog.txt"))
+            {
+                sw.WriteLine(cumulativeImbalance);
+            }
+            using (StreamWriter sw = File.AppendText("C:/Users/owenc/Documents/GitHub/FYPAIBalancingGame/FYPprototype/TrainingDataLogs/MoveSpeedLog.txt"))
+            {
+                sw.WriteLine(averageSpeed);
+            }
+            imbalanceList = new List<float>();
+            moveSpeedList = new List<float>();
+            EndEpisode();
+        }
+
     }
 
 
@@ -67,12 +100,14 @@ public class BalancingAI : Agent
         
         if(spawn && gameManager.mobs.Count < gameManager.maxMobs)
         {
-            /*
+            
             int x = actions.DiscreteActions[1] - 9;
             int y = actions.DiscreteActions[2] - 8;
-            gameManager.AddMob(x, y);
-            */
-            gameManager.AddMob();
+            float speed = actions.DiscreteActions[3] + 1;
+            moveSpeedList.Add(speed);
+            gameManager.AddMob(x, y, speed);
+            
+            //gameManager.AddMob();
         }
         
 
@@ -90,10 +125,10 @@ public class BalancingAI : Agent
     {
         float directions = playerFreedom();
         sensor.AddObservation(directions);
-        //for(int i = 0; i < gameManager.wallPositions.Length; i++)
-        //{ 
-        //sensor.AddObservation(gameManager.wallPositions[i]);
-        //}
+        for(int i = 0; i < gameManager.wallPositions.Length; i++)
+        { 
+        sensor.AddObservation(gameManager.wallPositions[i]);
+        }
         sensor.AddObservation(ImbalanceValue);
     }
 
@@ -118,17 +153,17 @@ public class BalancingAI : Agent
     /// <returns> The players empowerment </returns>;
     private float CalculatePlayerEmpowerment()
     {
-        float directions = playerFreedom();
-        /*
-        float degreesOfFreedom = 0;
-        foreach(float i in directions)
-        {
-            degreesOfFreedom += i;
-        }
-        float empowerment = degreesOfFreedom / 4;
-        Debug.Log("empowerment: " + empowerment);
-        */
-        float empowerment = directions / 8;
+        Shooting shots = gameManager.player.GetComponent<Shooting>();
+        float directions = playerFreedom()/8;
+        float bombs = shots.Bombs + 1;
+        float maxBombs = shots.MaxBombs + 1;
+        float remainingBombs = bombs/maxBombs;
+
+        float lives = gameManager.Lives + 1;
+        float maxLives = gameManager.MaxLives + 1;
+        float health = lives/maxLives;
+
+        float empowerment = directions*remainingBombs*health;
         Debug.Log("empowerment: " + empowerment);
         return empowerment;
     }

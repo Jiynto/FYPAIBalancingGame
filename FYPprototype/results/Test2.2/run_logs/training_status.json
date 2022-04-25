@@ -1,0 +1,65 @@
+{
+    "AIBalancing": {
+        "checkpoints": [
+            {
+                "steps": 499961,
+                "file_path": "results\\Test2.2\\AIBalancing\\AIBalancing-499961.onnx",
+                "reward": 22.335616438356166,
+                "creation_time": 1650855193.8132553,
+                "auxillary_file_paths": [
+                    "results\\Test2.2\\AIBalancing\\AIBalancing-499961.pt"
+                ]
+            },
+            {
+                "steps": 999967,
+                "file_path": "results\\Test2.2\\AIBalancing\\AIBalancing-999967.onnx",
+                "reward": 28.568181818181817,
+                "creation_time": 1650860370.6107786,
+                "auxillary_file_paths": [
+                    "results\\Test2.2\\AIBalancing\\AIBalancing-999967.pt"
+                ]
+            },
+            {
+                "steps": 1499994,
+                "file_path": "results\\Test2.2\\AIBalancing\\AIBalancing-1499994.onnx",
+                "reward": 18.964285714285715,
+                "creation_time": 1650865598.7906644,
+                "auxillary_file_paths": [
+                    "results\\Test2.2\\AIBalancing\\AIBalancing-1499994.pt"
+                ]
+            },
+            {
+                "steps": 1999947,
+                "file_path": "results\\Test2.2\\AIBalancing\\AIBalancing-1999947.onnx",
+                "reward": 17.796195652173914,
+                "creation_time": 1650870841.2829864,
+                "auxillary_file_paths": [
+                    "results\\Test2.2\\AIBalancing\\AIBalancing-1999947.pt"
+                ]
+            },
+            {
+                "steps": 2000011,
+                "file_path": "results\\Test2.2\\AIBalancing\\AIBalancing-2000011.onnx",
+                "reward": 17.796195652173914,
+                "creation_time": 1650870841.465519,
+                "auxillary_file_paths": [
+                    "results\\Test2.2\\AIBalancing\\AIBalancing-2000011.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2000011,
+            "file_path": "results\\Test2.2\\AIBalancing.onnx",
+            "reward": 17.796195652173914,
+            "creation_time": 1650870841.465519,
+            "auxillary_file_paths": [
+                "results\\Test2.2\\AIBalancing\\AIBalancing-2000011.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
